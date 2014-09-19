@@ -219,6 +219,26 @@ define([
 					handle.remove();
 				}
 			}
+		},
+
+		'/test/skip': function () {
+			var result = '',
+				test = new Test({
+					name: 'test',
+					skipped: 'skip'
+				}),
+				handle = mockConsole('log', function (string) {
+					result = string;
+				});
+
+			try {
+				reporter['/test/skip'](test);
+				assert.strictEqual(result, 'SKIP: test (skip)', 'Reporter should log a messages for a skipped test');
+				assert.include(result, hasGrouping ? test.name : test.id, 'Reporter should indicate which test skipped');
+			}
+			finally {
+				handle.remove();
+			}
 		}
 	});
 });
