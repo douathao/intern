@@ -239,6 +239,23 @@ define([
 			finally {
 				handle.remove();
 			}
+		},
+
+		'/suite/test/skip': function () {
+			var actualMessage,
+				suite = new Suite({ name: 'suite', tests: [ new Test({ name: 'test', skipped: 'skip'}) ] }),
+				handle = mockConsole('info', function (message) {
+					actualMessage = message;
+				});
+
+			try {
+				reporter['/suite/end'](suite);
+				assert.ok(actualMessage, 'console.info should be called when the reporter /suite/end method is called and there is a skipped test');
+				assert.match(actualMessage, new RegExp('(' + suite.numSkippedTests + ')'), 'console.info message should say how many tests skipped');
+			}
+			finally {
+				handle.remove();
+			}
 		}
 	});
 });
