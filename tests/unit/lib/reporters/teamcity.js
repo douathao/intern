@@ -156,6 +156,11 @@ define([
 			finally {
 				handle.remove();
 			}
+		},
+
+		'_escapeString': function () {
+			var string = reporter._escapeString('\n|\'\r[]\u0100-\uffff');
+			assert.strictEqual(string, '|n|||\'|r|[|]|0x100-|0xffff');
 		}
 	});
 });
