@@ -161,6 +161,18 @@ define([
 		'_escapeString': function () {
 			var string = reporter._escapeString('\n|\'\r[]\u0100-\uffff');
 			assert.strictEqual(string, '|n|||\'|r|[|]|0x100-|0xffff');
+		},
+
+		'/test/fail/error': function () {
+			var test = new Test({
+				name: 'test',
+				error: {
+					actual: 'actual',
+					expected: 'expected',
+					message: 'error'
+				}
+			});
+			testTest(test, '/test/fail', 'testFailed');
 		}
 	});
 });
