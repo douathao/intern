@@ -137,6 +137,25 @@ define([
 					error: new Error('Oops')
 				});
 			testTest(test, '/test/fail', 'testFailed');
+		},
+
+		'suite/main': function () {
+			var actualMessage,
+				handle = mockConsole('log', function (message) {
+					actualMessage = message;
+				});
+
+			var suite = new Suite({ name: 'main' });
+
+			try {
+				reporter['/suite/start'](suite);
+				assert.isUndefined(actualMessage);
+				reporter['/suite/end'](suite);
+				assert.isUndefined(actualMessage);
+			}
+			finally {
+				handle.remove();
+			}
 		}
 	});
 });
