@@ -14,5 +14,6 @@ define([
 	'dojo/has!host-node?./lib/reporters/teamcity',
 	'dojo/has!host-node?./lib/reporters/junit',
 	'dojo/has!host-node?./lib/reporters/lcov',
-	'dojo/has!host-node?./lib/reporters/cobertura'
+	'dojo/has!host-node?./lib/reporters/cobertura',
+	'dojo/has!host-node?./lib/reporters/combined'
 ], function () {});
