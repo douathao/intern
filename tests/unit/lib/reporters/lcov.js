@@ -41,12 +41,19 @@ define([
 
 			Collector.prototype.add = function (coverage) {
 				collectorCalled = true;
-				assert.deepEqual(coverage, mockCoverage, 'Collector#add should be called with the correct mockCoverage object');
+				assert.deepEqual(
+					coverage,
+					mockCoverage,
+					'Collector#add should be called with the correct mockCoverage object'
+				);
 			};
 
 			try {
 				lcov['/coverage'](sessionId, mockCoverage);
-				assert.isTrue(collectorCalled, 'Collector#add should be called when the reporter /coverage method is called');
+				assert.isTrue(
+					collectorCalled,
+					'Collector#add should be called when the reporter /coverage method is called'
+				);
 			}
 			finally {
 				Collector.prototype.add = oldAdd;
@@ -64,7 +71,10 @@ define([
 
 			try {
 				lcov.stop();
-				assert.isTrue(writeReportCalled, 'Reporter#writeReport should be called when the /runner/end method is called');
+				assert.isTrue(
+					writeReportCalled,
+					'Reporter#writeReport should be called when the /runner/end method is called'
+				);
 			}
 			finally {
 				Reporter.prototype.writeReport = oldWriteReport;

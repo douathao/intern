@@ -39,7 +39,10 @@ define([
 			try {
 				cobertura['/coverage'](sessionId, mockCoverage);
 				cobertura.stop();
-				assert.isTrue(fs.existsSync('cobertura-coverage.xml'), 'cobertura-coverage.xml file was written to disk');
+				assert.isTrue(
+					fs.existsSync('cobertura-coverage.xml'),
+					'cobertura-coverage.xml file was written to disk'
+				);
 				assert(fs.statSync('cobertura-coverage.xml').size > 0, 'cobertura-coverage.xml contains data');
 			}
 			finally {

@@ -95,7 +95,7 @@ define([
 		'/error': function () {
 			var result = [],
 				error = new Error('Oops'),
-				handle = mockConsole('error', function (err) {
+				handle = mockConsole('error', function () {
 					result = result.concat([].slice.call(arguments, 0));
 				});
 
@@ -136,7 +136,10 @@ define([
 
 			try {
 				reporter['/tunnel/download/progress'](tunnel, progress);
-				assert.strictEqual(actualMessage, 'Download ' + (progress.received / progress.total * 100) + '% complete');
+				assert.strictEqual(
+					actualMessage,
+					'Download ' + (progress.received / progress.total * 100) + '% complete'
+				);
 			} finally {
 				handle.remove();
 			}
@@ -148,7 +151,7 @@ define([
 					actualMessage = message;
 				}),
 				tunnel = null,
-				status = "success";
+				status = 'success';
 
 			try {
 				reporter['/tunnel/status'](tunnel, status);

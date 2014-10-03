@@ -35,7 +35,11 @@ define([
 				suite = new Suite({ name: 'suite' }),
 				handle = mockConsole('group', function (message) {
 					called = true;
-					assert.strictEqual(message, suite.name, 'console.group should be called with the name of the suite');
+					assert.strictEqual(
+						message,
+						suite.name,
+						'console.group should be called with the name of the suite'
+					);
 				});
 
 			try {
@@ -58,7 +62,11 @@ define([
 
 					try {
 						reporter['/suite/end'](suite);
-						assert.ok(actualMessage, 'console.info should be called when the reporter /suite/end method is called and there are no errors');
+						assert.ok(
+							actualMessage,
+							'console.info should be called when the reporter ' +
+							'/suite/end method is called and there are no errors'
+						);
 						assert.match(
 							actualMessage,
 							new RegExp('^' + suite.numFailedTests + '/' + suite.numTests + ' '),
@@ -78,7 +86,11 @@ define([
 
 					try {
 						reporter['/suite/end'](suite);
-						assert.ok(actualMessage, 'console.warn should be called when the reporter /suite/end method is called and there are errors');
+						assert.ok(
+							actualMessage,
+							'console.warn should be called when the reporter ' +
+							'/suite/end method is called and there are errors'
+						);
 						assert.match(
 							actualMessage,
 							new RegExp('^' + suite.numFailedTests + '/' + suite.numTests + ' '),
@@ -110,7 +122,11 @@ define([
 							handles = [
 								mockConsole('groupEnd', function (name) {
 									called = true;
-									assert.strictEqual(name, suite.name, 'console.groupEnd should be called with the name of the suite');
+									assert.strictEqual(
+										name,
+										suite.name,
+										'console.groupEnd should be called with the name of the suite'
+									);
 								}),
 								mockConsole('info', function () {
 									// no-op to prevent code from intercepting the /group/end topic and emitting test
@@ -120,7 +136,10 @@ define([
 
 						try {
 							reporter['/suite/end'](suite);
-							assert.isTrue(called, 'console.group should be called when the reporter /suite/end method is called');
+							assert.isTrue(
+								called,
+								'console.group should be called when the reporter /suite/end method is called'
+							);
 						}
 						finally {
 							var handle;
@@ -156,7 +175,11 @@ define([
 				assert.include(result, 'Oops', 'Reporter should include the message from the error');
 
 				if (result.indexOf('No stack or location') === -1) {
-					assert.include(result, 'tests/unit/lib/reporters/console.js:140', 'Reporter should indicate the location of the error');
+					assert.include(
+						result,
+						'tests/unit/lib/reporters/console.js:159',
+						'Reporter should indicate the location of the error'
+					);
 				}
 			}
 			finally {
@@ -176,8 +199,16 @@ define([
 				}),
 				handle = mockConsole('log', function (message) {
 					assert.match(message, /\bPASS\b/, 'Reporter should indicate that a test passed');
-					assert.include(message, hasGrouping ? test.name : test.id, 'Reporter should indicate which test passed');
-					assert.include(message, test.timeElapsed + 'ms', 'Reporter should indicate the amount of time the test took');
+					assert.include(
+						message,
+						hasGrouping ? test.name : test.id,
+						'Reporter should indicate which test passed'
+					);
+					assert.include(
+						message,
+						test.timeElapsed + 'ms',
+						'Reporter should indicate the amount of time the test took'
+					);
 				});
 
 			try {
@@ -211,7 +242,11 @@ define([
 				result = result.join('\n');
 				assert.match(result, /\bFAIL\b/, 'Reporter should indicate that a test failed');
 				assert.include(result, hasGrouping ? test.name : test.id, 'Reporter should indicate which test failed');
-				assert.include(result, test.timeElapsed + 'ms', 'Reporter should indicate the amount of time the test took');
+				assert.include(
+					result,
+					test.timeElapsed + 'ms',
+					'Reporter should indicate the amount of time the test took'
+				);
 			}
 			finally {
 				var handle;
@@ -234,7 +269,11 @@ define([
 			try {
 				reporter['/test/skip'](test);
 				assert.strictEqual(result, 'SKIP: test (skip)', 'Reporter should log a messages for a skipped test');
-				assert.include(result, hasGrouping ? test.name : test.id, 'Reporter should indicate which test skipped');
+				assert.include(
+					result,
+					hasGrouping ? test.name : test.id,
+					'Reporter should indicate which test skipped'
+				);
 			}
 			finally {
 				handle.remove();
@@ -250,8 +289,16 @@ define([
 
 			try {
 				reporter['/suite/end'](suite);
-				assert.ok(actualMessage, 'console.info should be called when the reporter /suite/end method is called and there is a skipped test');
-				assert.match(actualMessage, new RegExp('(' + suite.numSkippedTests + ')'), 'console.info message should say how many tests skipped');
+				assert.ok(
+					actualMessage,
+					'console.info should be called when the reporter ' +
+					'/suite/end method is called and there is a skipped test'
+				);
+				assert.match(
+					actualMessage,
+					new RegExp('(' + suite.numSkippedTests + ')'),
+					'console.info message should say how many tests skipped'
+				);
 			}
 			finally {
 				handle.remove();
