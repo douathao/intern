@@ -5,31 +5,6 @@ define([
 	'../../../../lib/Test',
 	'../../../../lib/reporters/combined'
 ], function (registerSuite, assert, fs, Test, reporter) {
-	var sessionId = 'foo',
-		mockCoverage = {
-			'main.js': {
-				'path': 'main.js',
-				's': {
-					'1': 1
-				},
-				'b': {},
-				'f': {},
-				'fnMap': {},
-				'statementMap': {
-					'1': {
-						'start': {
-							'line': 1,
-							'column': 0
-						},
-						'end': {
-							'line': 60,
-							'column': 3
-						}
-					}
-				},
-				'branchMap': {}
-			}
-		};
 
 	if (typeof console !== 'object') {
 		// IE<10 does not provide a global console object when Developer Tools is turned off
@@ -77,18 +52,6 @@ define([
 				assert.strictEqual(actualMessage, 'Testing ' + remote.environmentType);
 			} finally {
 				handle.remove();
-			}
-		},
-
-		'/coverage': function () {
-			try {
-				reporter['/coverage'](sessionId, mockCoverage);
-				reporter.stop();
-				assert.isTrue(fs.existsSync('coverage-final.json'), 'coverage-final.json file was written to disk');
-				assert(fs.statSync('coverage-final.json').size > 0, 'coverage-final.json contains data');
-			}
-			finally {
-				fs.existsSync('coverage-final.json') && fs.unlinkSync('coverage-final.json');
 			}
 		},
 
