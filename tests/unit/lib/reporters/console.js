@@ -4,14 +4,40 @@ define([
 	'dojo/lang',
 	'../../../../lib/Suite',
 	'../../../../lib/Test',
-	'../../../../lib/reporters/console'
-], function (registerSuite, assert, lang, Suite, Test, reporter) {
+	'../../../../lib/reporters/console',
+	'dojo/has',
+], function (registerSuite, assert, lang, Suite, Test, reporter, has) {
 	if (typeof console !== 'object') {
 		// IE<10 does not provide a global console object when Developer Tools is turned off
 		return;
 	}
 
 	var hasGrouping = 'group' in console && 'groupEnd' in console;
+	var sessionId = 'foo',
+		mockCoverage = {
+			'main.js': {
+				'path': 'main.js',
+				's': {
+					'1': 1
+				},
+				'b': {},
+				'f': {},
+				'fnMap': {},
+				'statementMap': {
+					'1': {
+						'start': {
+							'line': 1,
+							'column': 0
+						},
+						'end': {
+							'line': 60,
+							'column': 3
+						}
+					}
+				},
+				'branchMap': {}
+			}
+		};
 
 	function mockConsole(method, callback) {
 		var oldMethod = console[method];
@@ -177,7 +203,7 @@ define([
 				if (result.indexOf('No stack or location') === -1) {
 					assert.include(
 						result,
-						'tests/unit/lib/reporters/console.js:159',
+						'tests/unit/lib/reporters/console.js:185',
 						'Reporter should indicate the location of the error'
 					);
 				}
@@ -302,6 +328,21 @@ define([
 			}
 			finally {
 				handle.remove();
+			}
+		},
+
+		'/coverage': function () {
+			var actualMessage,
+				handle = mockConsole('log', function (message) {
+					actualMessage = message;
+				});
+			if (has('host-node')) {
+				try {
+					reporter['/coverage'](sessionId, mockCoverage);
+					assert.ok(actualMessage);
+				} finally {
+					handle.remove();
+				}
 			}
 		}
 	});
