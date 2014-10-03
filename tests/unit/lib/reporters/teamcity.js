@@ -76,11 +76,25 @@ define([
 	registerSuite({
 		name: 'intern/lib/reporters/teamcity',
 
-		'/suite/start': function () {
-			var suite = new Suite({ name: 'suite' });
-			testSuite(suite, '/suite/start', 'testSuiteStarted');
+		'/suite/start': {
+			'normal suite': function () {
+				var suite = new Suite({ name: 'suite' });
+				testSuite(suite, '/suite/start', 'testSuiteStarted');
+			},
+			'main suite': function () {
+				var actualMessage,
+					handle = mockConsole('log', function (message) {
+						actualMessage = message;
+					});
+				var suite = new Suite({name: 'main'}); suite.sub = new Suite({ parent: suite, name: 'sub' });
+				try {
+					reporter['/suite/start'](suite.sub);
+					assert.isUndefined(actualMessage);
+				} finally {
+					handle.remove();
+				}
+			}
 		},
-
 		'/suite/end': (function () {
 			var suite = {
 				'successful suite': function () {
@@ -93,6 +107,20 @@ define([
 					var suite = new Suite({ name: 'suite', tests: [ new Test({ hasPassed: false }) ] });
 					reporter._suiteStarts[suite.id] = 0;
 					testSuite(suite, '/suite/end', 'testSuiteFinished');
+				},
+
+				'main suite': function () {
+					var actualMessage,
+						handle = mockConsole('log', function (message) {
+							actualMessage = message;
+						});
+					var suite = new Suite({name: 'main'}); suite.sub = new Suite({ parent: suite, name: 'sub' });
+					try {
+						reporter['/suite/end'](suite.sub);
+						assert.isUndefined(actualMessage);
+					} finally {
+						handle.remove();
+					}
 				}
 			};
 
@@ -137,25 +165,6 @@ define([
 					error: new Error('Oops')
 				});
 			testTest(test, '/test/fail', 'testFailed');
-		},
-
-		'suite/main': function () {
-			var actualMessage,
-				handle = mockConsole('log', function (message) {
-					actualMessage = message;
-				});
-
-			var suite = new Suite({ name: 'main' });
-
-			try {
-				reporter['/suite/start'](suite);
-				assert.isUndefined(actualMessage);
-				reporter['/suite/end'](suite);
-				assert.isUndefined(actualMessage);
-			}
-			finally {
-				handle.remove();
-			}
 		},
 
 		'_escapeString': function () {
